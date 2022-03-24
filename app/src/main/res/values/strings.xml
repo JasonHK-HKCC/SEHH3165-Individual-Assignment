@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">BMI &amp; Zodiac</string>
+
+    <string name="author_name">Kwok Chi Leong</string>
+    <string name="author_student_id" translatable="false">20100597A</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_navigation_home">Home</string>
+    <string name="menu_navigation_bmi">BMI</string>
+    <string name="menu_navigation_zodiac">Zodiac</string>
+
+    <string name="preference_user_header_author">Author</string>
+    <string name="preference_header_user">Personal Info</string>
+    <string name="preference_name_title">Name</string>
+    <string name="height_title">Height</string>
+    <string name="height_summary">Your height in centimeters</string>
+    <string name="weight_title">Weight</string>
+    <string name="weight_summary">Your weight in kilograms</string>
+    <string name="preference_birthday_title">Birthday</string>
+    <string name="gender_title">Gender</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>

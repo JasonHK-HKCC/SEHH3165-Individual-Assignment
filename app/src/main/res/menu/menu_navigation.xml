@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/fragment_home"
+          android:icon="@drawable/ic_round_home_24"
+          android:title="@string/menu_navigation_home" />
+    <item android:id="@+id/fragment_bmi"
+          android:icon="@drawable/ic_round_body_24"
+          android:title="@string/menu_navigation_bmi" />
+    <item android:id="@+id/fragment_zodiac"
+          android:icon="@drawable/ic_round_calendar_24"
+          android:title="@string/menu_navigation_zodiac" />
+</menu>

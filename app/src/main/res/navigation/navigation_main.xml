@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/navigation"
+            app:startDestination="@id/fragment_home">
+    <fragment android:id="@+id/fragment_home"
+              android:name="app.jasonhk.hkcc.bnz.HomeFragment"
+              android:label="fragment_home" />
+    <fragment android:id="@+id/fragment_bmi"
+              android:name="app.jasonhk.hkcc.bnz.BmiFragment"
+              android:label="fragment_bmi"
+              tools:layout="@layout/fragment_bmi" />
+    <fragment android:id="@+id/fragment_zodiac"
+              android:name="app.jasonhk.hkcc.bnz.ZodiacFragment"
+              android:label="fragment_zodiac"
+              tools:layout="@layout/fragment_zodiac" />
+</navigation>
