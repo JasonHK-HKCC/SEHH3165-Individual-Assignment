@@ -34,6 +34,11 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok:1.18.22")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.22")
 
+    implementation("androidx.cardview:cardview:1.0.0")
+
+    implementation("com.github.salehyarahmadi:DataTable:v1.0.1")
+
+
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.preference:preference:1.1.1")
     val nav_version = "2.4.1"

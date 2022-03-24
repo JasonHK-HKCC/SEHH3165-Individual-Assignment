@@ -2,63 +2,36 @@ package app.jasonhk.hkcc.bnz;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.time.LocalDate;
+import java.time.MonthDay;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Arrays;
+import java.util.Locale;
+
+import lombok.Getter;
+import lombok.val;
+import lombok.var;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ZodiacFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * The {@link Fragment} for the Zodiac page.
  */
 public class ZodiacFragment extends Fragment
 {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ZodiacFragment()
-    {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ZodiacFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ZodiacFragment newInstance(String param1, String param2)
-    {
-        ZodiacFragment fragment = new ZodiacFragment();
-        Bundle         args     = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null)
-        {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    public ZodiacFragment() {}
 
     @Override
     public View onCreateView(
@@ -67,5 +40,51 @@ public class ZodiacFragment extends Fragment
     {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_zodiac, container, false);
+    }
+
+    @Override
+    public void onViewCreated(
+            @NonNull View view, @Nullable Bundle savedInstanceState)
+    {
+        Log.d("ZodiacFragment", "onViewCreated");
+        super.onViewCreated(view, savedInstanceState);
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        var notSetText = "Not set";
+        {
+            val notSetId = getResources()
+                    .getIdentifier("not_set", "string", getContext().getPackageName());
+            if (notSetId != 0) { notSetText = getString(notSetId); }
+        }
+
+        val name = preferences.getString("user_name", notSetText);
+        ((TextView) view.findViewById(R.id.user_name)).setText(name);
+
+        var gender = notSetText;
+        {
+            val genderType = Gender.fromKey(preferences.getString("user_gender", null));
+            if (genderType != null)
+            {
+                gender = getResources().getStringArray(R.array.gender_entries)[genderType.ordinal()];
+            }
+        }
+
+        TextView userSummaryView = view.findViewById(R.id.user_summary);
+        userSummaryView.setText(getString(R.string.user_summary_zodiac, notSetText, gender));
+
+        val zodiac = Zodiac.from(LocalDate.parse("2000-03-07"));
+
+        ImageView zodiacSignView = view.findViewById(R.id.zodiac_sign);
+        zodiacSignView.setImageDrawable(ContextCompat.getDrawable(getContext(), zodiac.getIcon()));
+
+        TextView zodiacNameView = view.findViewById(R.id.zodiac_name);
+        zodiacNameView.setText(getString(zodiac.getName()));
+
+        TextView zodiacDatesView     = view.findViewById(R.id.zodiac_dates);
+        val      rangeDatesFormatter = DateTimeFormatter.ofPattern("MMMM d", Locale.ENGLISH);
+        zodiacDatesView.setText(getString(R.string.date_range,
+                                          zodiac.getBegin().format(rangeDatesFormatter),
+                                          zodiac.getUntil().format(rangeDatesFormatter)));
     }
 }

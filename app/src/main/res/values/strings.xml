@@ -4,6 +4,29 @@
     <string name="author_name">Kwok Chi Leong</string>
     <string name="author_student_id" translatable="false">20100597A</string>
 
+    <string name="category_header">Category</string>
+    <string name="bmi_header_with_formula">BMI (kg/m&#178;)</string>
+
+    <!-- Zodiac -->
+    <string name="zodiac_aries">Aries</string>
+    <string name="zodiac_aries_summary">Aries is the first sign of the zodiac, considered as governing the period from approximately March 20 to April 21.</string>
+    <string name="zodiac_taurus">Taurus</string>
+    <string name="zodiac_gemini">Gemini</string>
+    <string name="zodiac_cancer">Cancer</string>
+    <string name="zodiac_leo">Leo</string>
+    <string name="zodiac_virgo">Virgo</string>
+    <string name="zodiac_libra">Libra</string>
+    <string name="zodiac_scorpius">Scorpius</string>
+    <string name="zodiac_sagittarius">Sagittarius</string>
+    <string name="zodiac_capricornus">Capricornus</string>
+    <string name="zodiac_aquarius">Aquarius</string>
+    <string name="zodiac_pisces">Pisces</string>
+
+    <string name="date_range">%1$s – %2$s</string>
+
+    <string name="user_summary_bmi">%1$d cm · %2$d kg · %3$s · %4$s</string>
+    <string name="user_summary_zodiac">%1$s · %2$s</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_navigation_home">Home</string>

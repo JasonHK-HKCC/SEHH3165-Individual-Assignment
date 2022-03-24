@@ -61,7 +61,7 @@ public class HomeFragment extends PreferenceFragmentCompat
         Log.d("SettingsFragment", preference.getKey());
         if (preference.getKey().equals(BIRTHDAY_KEY))
         {
-            val sharedPreferences = preference.getSharedPreferences();
+            val preferences = preference.getSharedPreferences();
 
 
             val picker = new DatePickerDialog(getContext());

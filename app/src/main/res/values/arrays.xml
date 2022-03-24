@@ -18,4 +18,25 @@
         <item>male</item>
         <item>female</item>
     </string-array>
+
+    <string-array name="bmi_categories">
+        <item>Underweight (Severe)</item>
+        <item>Underweight (Moderate)</item>
+        <item>Underweight (Mild)</item>
+        <item>Normal</item>
+        <item>Overweight (Pre-obese)</item>
+        <item>Obese (Class I)</item>
+        <item>Obese (Class II)</item>
+        <item>Obese (Class III)</item>
+    </string-array>
+    <string-array name="bmi_ranges" translatable="false">
+        <item>&lt; 16.0</item>
+        <item>16.0 – 16.9</item>
+        <item>17.0 – 18.4</item>
+        <item>18.5 – 24.9</item>
+        <item>25.0 – 29.9</item>
+        <item>30.0 – 34.9</item>
+        <item>35.0 – 39.9</item>
+        <item>&#8805; 40.0</item>
+    </string-array>
 </resources>
