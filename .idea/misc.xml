@@ -7,8 +7,10 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.29393115942028986" />
         <entry key="app/src/main/res/layout/fragment_bmi.xml" value="0.3078125" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3078125" />
+        <entry key="app/src/main/res/layout/fragment_zodiac.xml" value="0.41135573580533025" />
+        <entry key="app/src/main/res/menu/menu_navigation.xml" value="0.3078125" />
         <entry key="app/src/main/res/menu/navigation.xml" value="0.15390625" />
-        <entry key="app/src/main/res/xml/preferences_user.xml" value="0.3078125" />
+        <entry key="app/src/main/res/xml/preferences_user.xml" value="0.264" />
         <entry key="app/src/main/res/xml/root_preferences.xml" value="0.3078125" />
       </map>
     </option>
