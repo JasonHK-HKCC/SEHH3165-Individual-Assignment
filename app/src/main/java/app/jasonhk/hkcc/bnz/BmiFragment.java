@@ -10,8 +10,12 @@ import androidx.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 
 import ir.androidexception.datatable.DataTable;
@@ -22,32 +26,10 @@ import lombok.var;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link BmiFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
-public class BmiFragment extends Fragment
+public class BmiFragment extends Fragment implements View.OnClickListener
 {
-    public BmiFragment()
-    {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BmiFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static BmiFragment newInstance(String param1, String param2)
-    {
-        BmiFragment fragment = new BmiFragment();
-        Bundle      args     = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public BmiFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -70,8 +52,7 @@ public class BmiFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        val resources = getResources();
-
+        val resources   = getResources();
         val preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         var notSetText = "Not set";
@@ -81,24 +62,95 @@ public class BmiFragment extends Fragment
             if (notSetId != 0) { notSetText = getString(notSetId); }
         }
 
+        //<editor-fold desc="User Info">
         val name = preferences.getString("user_name", notSetText);
         ((TextView) view.findViewById(R.id.user_name)).setText(name);
 
         val height = preferences.getInt("user_height", 180);
         val weight = preferences.getInt("user_weight", 60);
 
+        var brithday = preferences.getString("user_birthday", null);
+        if (brithday != null)
+        {
+            brithday = LocalDate.parse(brithday)
+                                .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+        }
+        else
+        {
+            brithday = notSetText;
+        }
+
         var gender = notSetText;
         {
             val genderType = Gender.fromKey(preferences.getString("user_gender", null));
             if (genderType != null)
             {
-                gender = getResources().getStringArray(R.array.gender_entries)[genderType.ordinal()];
+                gender = resources.getStringArray(R.array.gender_entries)[genderType.ordinal()];
             }
         }
 
         TextView userSummaryView = view.findViewById(R.id.user_summary);
         userSummaryView.setText(
-                getString(R.string.user_summary_bmi, height, weight, notSetText, gender));
+                getString(R.string.user_summary_bmi, height, weight, brithday, gender));
+        //</editor-fold>
+
+        //<editor-fold desc="BMI Result">
+        val bmi = weight / Math.pow(height / 100.0, 2);
+
+        TextView bmiResultView = view.findViewById(R.id.bmi_result);
+        bmiResultView.setText(getString(R.string.bmi_result_header, bmi));
+
+        val bmiCategories = resources.getStringArray(R.array.bmi_categories);
+
+        TextView bmiCategoryView   = view.findViewById(R.id.bmi_category);
+        TextView bmiSuggestionView = view.findViewById(R.id.bmi_suggestions);
+
+        String bmiCategory;
+        if (bmi < 18.5)
+        {
+            if (bmi < 16)
+            {
+                bmiCategory = bmiCategories[0];
+            }
+            else if (bmi < 17)
+            {
+                bmiCategory = bmiCategories[1];
+            }
+            else
+            {
+                bmiCategory = bmiCategories[2];
+            }
+
+            bmiSuggestionView.setText(R.string.bmi_suggestions_underweight);
+        }
+        else if (bmi < 25)
+        {
+            bmiCategory = bmiCategories[3];
+            bmiSuggestionView.setText(R.string.bmi_suggestions_normal);
+        }
+        else
+        {
+            if (bmi < 30)
+            {
+                bmiCategory = bmiCategories[4];
+            }
+            else if (bmi < 35)
+            {
+                bmiCategory = bmiCategories[5];
+            }
+            else if (bmi < 40)
+            {
+                bmiCategory = bmiCategories[6];
+            }
+            else
+            {
+                bmiCategory = bmiCategories[7];
+            }
+
+            bmiSuggestionView.setText(R.string.bmi_suggestions_overweight);
+        }
+        bmiCategoryView.setText(bmiCategory);
+        //</editor-fold>
 
         //<editor-fold desc="BMI Table">
         DataTable bmiTable = view.findViewById(R.id.bmi_table);
@@ -107,8 +159,7 @@ public class BmiFragment extends Fragment
                 .item(getString(R.string.bmi_header_with_formula), 2)
                 .build();
 
-        val bmiRows = new ArrayList<DataTableRow>();
-        val bmiCategories = resources.getStringArray(R.array.bmi_categories);
+        val bmiRows   = new ArrayList<DataTableRow>();
         val bmiRanges = resources.getStringArray(R.array.bmi_ranges);
         for (var i = 0; i < bmiCategories.length; i++)
         {
@@ -122,6 +173,32 @@ public class BmiFragment extends Fragment
         bmiTable.setHeader(bmiHeader);
         bmiTable.setRows(bmiRows);
         bmiTable.inflate(getContext());
+
+        ImageButton bmiTableToggle = view.findViewById(R.id.bmi_table_toggle);
+        bmiTableToggle.setOnClickListener(this);
+        onClick(bmiTableToggle);
         //</editor-fold>
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        if (view.getId() == R.id.bmi_table_toggle)
+        {
+            val       bmiTableToggle = (ImageButton) view;
+            DataTable bmiTable       = getView().findViewById(R.id.bmi_table);
+
+            switch (bmiTable.getVisibility())
+            {
+                case View.VISIBLE:
+                    bmiTable.setVisibility(View.GONE);
+                    bmiTableToggle.setImageResource(R.drawable.ic_arrow_down);
+                    break;
+                case View.GONE:
+                    bmiTable.setVisibility(View.VISIBLE);
+                    bmiTableToggle.setImageResource(R.drawable.ic_arrow_up);
+                    break;
+            }
+        }
     }
 }

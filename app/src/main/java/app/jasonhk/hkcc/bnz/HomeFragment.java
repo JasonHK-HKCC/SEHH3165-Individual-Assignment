@@ -12,17 +12,20 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SeekBarPreference;
 
 import android.util.Log;
+import android.widget.DatePicker;
 import android.widget.TextView;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 import lombok.val;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class HomeFragment extends PreferenceFragmentCompat
-        implements Preference.OnPreferenceClickListener
+        implements Preference.OnPreferenceClickListener, DatePickerDialog.OnDateSetListener
 {
     private final String NAME_KEY     = "user_name";
     private final String HEIGHT_KEY   = "user_height";
@@ -50,7 +53,11 @@ public class HomeFragment extends PreferenceFragmentCompat
         }
 
         val birthday = findPreference(BIRTHDAY_KEY);
-        if (birthday != null) { birthday.setOnPreferenceClickListener(this); }
+        if (birthday != null)
+        {
+            birthday.setSummaryProvider(new DatePickerSummaryProvider());
+            birthday.setOnPreferenceClickListener(this);
+        }
     }
 
     @Override
@@ -58,29 +65,74 @@ public class HomeFragment extends PreferenceFragmentCompat
     {
         if (!preference.hasKey()) { return false; }
 
-        Log.d("SettingsFragment", preference.getKey());
         if (preference.getKey().equals(BIRTHDAY_KEY))
         {
             val preferences = preference.getSharedPreferences();
+            val value       = preferences.getString(preference.getKey(), null);
 
+            DatePickerDialog dialog;
+            if (value == null)
+            {
+                dialog = new DatePickerDialog(getContext());
+                dialog.setOnDateSetListener(this);
+            }
+            else
+            {
+                val date = LocalDate.parse(value);
+                dialog = new DatePickerDialog(
+                        getContext(), this,
+                        date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
+            }
 
-            val picker = new DatePickerDialog(getContext());
-//            picker.setOnDateSetListener();
-            picker.show();
+            dialog.show();
             return true;
         }
 
         return false;
     }
 
-    static class HeightSummaryProvider implements Preference.SummaryProvider<SeekBarPreference>
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth)
     {
+        val date = LocalDate.of(year, month + 1, dayOfMonth);
+
+        val birthday = findPreference(BIRTHDAY_KEY);
+        birthday.setSummaryProvider(null);
+        birthday.setSummary(date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+        birthday.getSharedPreferences().edit().putString(BIRTHDAY_KEY, date.toString()).apply();
+    }
+
+    static class DatePickerSummaryProvider implements Preference.SummaryProvider<Preference>
+    {
+        private final DateTimeFormatter formatter;
+
+        public DatePickerSummaryProvider()
+        {
+            this(FormatStyle.MEDIUM);
+        }
+
+        public DatePickerSummaryProvider(FormatStyle style)
+        {
+            this(DateTimeFormatter.ofLocalizedDate(style));
+        }
+
+        public DatePickerSummaryProvider(DateTimeFormatter formatter)
+        {
+            this.formatter = formatter;
+        }
 
         @Override
-        public CharSequence provideSummary(SeekBarPreference preference)
+        public CharSequence provideSummary(Preference preference)
         {
-//            preference.getValue();
-            return null;
+            val value = preference.getSharedPreferences().getString(preference.getKey(), null);
+            if (value != null)
+            {
+                return LocalDate.parse(value).format(formatter);
+            }
+            else
+            {
+                return "Not set";
+            }
         }
     }
 }

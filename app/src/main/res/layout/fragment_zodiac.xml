@@ -31,7 +31,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/not_set"
                     android:textAppearance="?attr/textAppearanceHeadline6"
-                    tools:text="@string/not_set" />
+                    tools:text="user_name" />
 
                 <TextView
                     android:id="@+id/user_summary"
@@ -62,7 +62,6 @@
                     android:layout_height="200dp"
                     android:layout_marginTop="-16dp"
                     android:layout_marginBottom="-32dp"
-                    android:src="@drawable/ic_zodiac_libra"
                     app:tint="?android:attr/textColorPrimary"
                     tools:src="@drawable/ic_zodiac_aries" />
 
@@ -76,7 +75,7 @@
                         android:id="@+id/zodiac_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="zodiac_name"
+                        android:text=""
                         android:textAppearance="?attr/textAppearanceHeadline6"
                         tools:text="@string/zodiac_aries" />
 
@@ -85,16 +84,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="zodiac_dates"
+                        android:text=""
                         android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="?android:attr/textColorSecondary" />
+                        android:textColor="?android:attr/textColorSecondary"
+                        tools:text="@string/date_range"/>
 
                     <TextView
                         android:id="@+id/zodiac_summary"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="zodiac_summary"
+                        android:text=""
                         android:textAppearance="?attr/textAppearanceBody2"
                         android:textColor="?android:attr/textColorSecondary"
                         tools:text="@string/zodiac_aries_summary" />

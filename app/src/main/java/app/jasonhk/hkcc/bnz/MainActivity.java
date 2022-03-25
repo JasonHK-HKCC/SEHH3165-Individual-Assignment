@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
         NavigationUI.setupWithNavController(bottomNavigation, navController);
 
-//        bottomNavigation.getMenu().findItem(R.id.f)
+//        bottomNavigation.getMenu().findItem(R.id.fragment_bmi).setEnabled(false);
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         preferences.registerOnSharedPreferenceChangeListener(this);

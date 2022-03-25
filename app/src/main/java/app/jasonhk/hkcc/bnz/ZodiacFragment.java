@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,7 @@ public class ZodiacFragment extends Fragment
         Log.d("ZodiacFragment", "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
 
+        val resources   = getResources();
         val preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         var notSetText = "Not set";
@@ -58,33 +60,50 @@ public class ZodiacFragment extends Fragment
             if (notSetId != 0) { notSetText = getString(notSetId); }
         }
 
+        //<editor-fold desc="User Info">
         val name = preferences.getString("user_name", notSetText);
         ((TextView) view.findViewById(R.id.user_name)).setText(name);
+
+        val brithdayValue = preferences.getString("user_birthday", null);
+        val brithday = (brithdayValue != null)
+                       ? LocalDate.parse(brithdayValue)
+                                  .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+                       : notSetText;
 
         var gender = notSetText;
         {
             val genderType = Gender.fromKey(preferences.getString("user_gender", null));
             if (genderType != null)
             {
-                gender = getResources().getStringArray(R.array.gender_entries)[genderType.ordinal()];
+                gender = resources.getStringArray(R.array.gender_entries)[genderType.ordinal()];
             }
         }
 
         TextView userSummaryView = view.findViewById(R.id.user_summary);
-        userSummaryView.setText(getString(R.string.user_summary_zodiac, notSetText, gender));
+        userSummaryView.setText(getString(R.string.user_summary_zodiac, brithday, gender));
+        //</editor-fold>
 
-        val zodiac = Zodiac.from(LocalDate.parse("2000-03-07"));
+        //<editor-fold desc="Zodiac Info">
+        if (brithdayValue != null)
+        {
+            val zodiac = Zodiac.from(LocalDate.parse(brithdayValue));
 
-        ImageView zodiacSignView = view.findViewById(R.id.zodiac_sign);
-        zodiacSignView.setImageDrawable(ContextCompat.getDrawable(getContext(), zodiac.getIcon()));
+            ImageView zodiacSignView = view.findViewById(R.id.zodiac_sign);
+            zodiacSignView.setImageDrawable(
+                    ContextCompat.getDrawable(getContext(), zodiac.getIcon()));
 
-        TextView zodiacNameView = view.findViewById(R.id.zodiac_name);
-        zodiacNameView.setText(getString(zodiac.getName()));
+            TextView zodiacNameView = view.findViewById(R.id.zodiac_name);
+            zodiacNameView.setText(getString(zodiac.getName()));
 
-        TextView zodiacDatesView     = view.findViewById(R.id.zodiac_dates);
-        val      rangeDatesFormatter = DateTimeFormatter.ofPattern("MMMM d", Locale.ENGLISH);
-        zodiacDatesView.setText(getString(R.string.date_range,
-                                          zodiac.getBegin().format(rangeDatesFormatter),
-                                          zodiac.getUntil().format(rangeDatesFormatter)));
+            TextView zodiacDatesView     = view.findViewById(R.id.zodiac_dates);
+            val      rangeDatesFormatter = DateTimeFormatter.ofPattern("MMMM d", Locale.ENGLISH);
+            zodiacDatesView.setText(getString(R.string.date_range,
+                                              zodiac.getBegin().format(rangeDatesFormatter),
+                                              zodiac.getUntil().format(rangeDatesFormatter)));
+
+            TextView zodiacSummaryView = view.findViewById(R.id.zodiac_summary);
+            zodiacSummaryView.setText(zodiac.getSummary());
+        }
+        //</editor-fold>
     }
 }
